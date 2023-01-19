@@ -1,0 +1,32 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fourier
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fourier
+  template:
+    metadata:
+      labels:
+        app: fourier
+    spec:
+      containers:
+        - name: fourier
+          image: registry.digitalocean.com/dsd-paas-cr/fourier:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3000
+          env:
+            - name: REDIS_URL
+              valueFrom:
+                secretKeyRef:
+                  name: redis-url
+                  key: redis_url
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: database-url
+                  key: database_url
